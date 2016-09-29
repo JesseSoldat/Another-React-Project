@@ -5,6 +5,14 @@ import firebase from 'firebase';
 
 class Layout extends Component {
 
+	logout(){
+		firebase.auth().signOut().then(function(){
+
+		}, function(err){
+
+		});
+	}
+
 	render(){
 		return(
 			<div>
@@ -22,9 +30,17 @@ class Layout extends Component {
 									</IndexLink>
 								</li>
 								<li>
+									<Link to="/login">
+										login
+									</Link>
+								</li>
+								<li>
 									<Link to="/register">
 										register
 									</Link>
+								</li>
+								<li onClick={this.logout}>
+									<Link>Logout</Link>
 								</li>
 							</ul>
 						</div>

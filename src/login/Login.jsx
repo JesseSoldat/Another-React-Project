@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import firebase from 'firebase';
 
-
-class Register extends Component {
+class Login extends Component {
 
 	constructor(props){
 		super(props)
@@ -12,28 +11,27 @@ class Register extends Component {
 			email: '',
 			pass: ''
 		}
-
 		this.onChangeEmail = this.onChangeEmail.bind(this);
 
 		this.onChangePass = this.onChangePass.bind(this);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
-
-
 	}
 
 	componentWillMount(){
+
 		firebase.auth().onAuthStateChanged(function(user){
 			if(user){
 				browserHistory.push('/');
 			}
 		})
+
 	}
 
 	onChangeEmail(e){
 		this.setState({email: e.target.value});
 	}
-	
+
 	onChangePass(e){
 		this.setState({pass: e.target.value});
 	}
@@ -43,17 +41,16 @@ class Register extends Component {
 		let email = this.state.email;
 		let pass = this.state.pass;
 
-		firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(err){
+		firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(err){
 
 		});
 		
 	}
 
-
 	render(){
 		return(
 		<div>
-			<h3>Register</h3>
+			<h3>Login</h3>
 			<form onSubmit={this.handleSubmit}>
 				<input type="text"
 						placeholder="Email"
@@ -67,12 +64,10 @@ class Register extends Component {
 						onChange={this.onChangePass}
 						required
 						/>
-				<button>Submit</button>
+					<button>Submit</button>
 			</form>
-			<Link to="/login">Login</Link>
-
 		</div>
-			);
+		);
 	}
 }
-export default Register;
+export default Login;

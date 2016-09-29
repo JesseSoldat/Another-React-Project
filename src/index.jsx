@@ -8,7 +8,7 @@ import Layout from './home/Layout.jsx';
 import Home from './home/Home.jsx';
 
 import Register from './login/Register.jsx';
-
+import Login from './login/Login.jsx';
 
 firebase.initializeApp(fireConfig);
 
@@ -18,6 +18,7 @@ render(
 		<Route path="/" component={Layout} >
 			<IndexRoute component={Home}/>
 			<Route path="/register" component={Register}/>
+			<Route path="/login" component={Login}/>
 		</Route>
 
 	</Router>,

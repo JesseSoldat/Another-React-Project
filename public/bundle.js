@@ -77,6 +77,10 @@
 	
 	var _Register2 = _interopRequireDefault(_Register);
 	
+	var _Login = __webpack_require__(/*! ./login/Login.jsx */ 245);
+	
+	var _Login2 = _interopRequireDefault(_Login);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	_firebase2.default.initializeApp(_firebaseConfig2.default);
@@ -88,7 +92,8 @@
 			_reactRouter.Route,
 			{ path: '/', component: _Layout2.default },
 			_react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/register', component: _Register2.default })
+			_react2.default.createElement(_reactRouter.Route, { path: '/register', component: _Register2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default })
 		)
 	), document.getElementById('container'));
 
@@ -28539,6 +28544,11 @@
 		}
 	
 		_createClass(Layout, [{
+			key: 'logout',
+			value: function logout() {
+				_firebase2.default.auth().signOut().then(function () {}, function (err) {});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
@@ -28579,8 +28589,26 @@
 										null,
 										_react2.default.createElement(
 											_reactRouter.Link,
+											{ to: '/login' },
+											'login'
+										)
+									),
+									_react2.default.createElement(
+										'li',
+										null,
+										_react2.default.createElement(
+											_reactRouter.Link,
 											{ to: '/register' },
 											'register'
+										)
+									),
+									_react2.default.createElement(
+										'li',
+										{ onClick: this.logout },
+										_react2.default.createElement(
+											_reactRouter.Link,
+											null,
+											'Logout'
 										)
 									)
 								)
@@ -28616,6 +28644,12 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactRouter = __webpack_require__(/*! react-router */ 172);
+	
+	var _firebase = __webpack_require__(/*! firebase */ 235);
+	
+	var _firebase2 = _interopRequireDefault(_firebase);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28634,6 +28668,16 @@
 		}
 	
 		_createClass(Home, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+	
+				_firebase2.default.auth().onAuthStateChanged(function (user) {
+					if (user) {} else {
+						_reactRouter.browserHistory.push('/login');
+					}
+				});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
@@ -28696,10 +28740,44 @@
 				pass: ''
 			};
 	
+			_this.onChangeEmail = _this.onChangeEmail.bind(_this);
+	
+			_this.onChangePass = _this.onChangePass.bind(_this);
+	
+			_this.handleSubmit = _this.handleSubmit.bind(_this);
+	
 			return _this;
 		}
 	
 		_createClass(Register, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				_firebase2.default.auth().onAuthStateChanged(function (user) {
+					if (user) {
+						_reactRouter.browserHistory.push('/');
+					}
+				});
+			}
+		}, {
+			key: 'onChangeEmail',
+			value: function onChangeEmail(e) {
+				this.setState({ email: e.target.value });
+			}
+		}, {
+			key: 'onChangePass',
+			value: function onChangePass(e) {
+				this.setState({ pass: e.target.value });
+			}
+		}, {
+			key: 'handleSubmit',
+			value: function handleSubmit(e) {
+				e.preventDefault();
+				var email = this.state.email;
+				var pass = this.state.pass;
+	
+				_firebase2.default.auth().createUserWithEmailAndPassword(email, pass).catch(function (err) {});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
@@ -28712,11 +28790,29 @@
 					),
 					_react2.default.createElement(
 						'form',
-						null,
+						{ onSubmit: this.handleSubmit },
 						_react2.default.createElement('input', { type: 'text',
-							placeholder: 'Email'
-	
-						})
+							placeholder: 'Email',
+							value: this.state.email,
+							onChange: this.onChangeEmail,
+							required: true
+						}),
+						_react2.default.createElement('input', { type: 'text',
+							placeholder: 'Password',
+							value: this.state.pass,
+							onChange: this.onChangePass,
+							required: true
+						}),
+						_react2.default.createElement(
+							'button',
+							null,
+							'Submit'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/login' },
+						'Login'
 					)
 				);
 			}
@@ -28726,6 +28822,129 @@
 	}(_react.Component);
 	
 	exports.default = Register;
+
+/***/ },
+/* 245 */
+/*!*****************************!*\
+  !*** ./src/login/Login.jsx ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 172);
+	
+	var _firebase = __webpack_require__(/*! firebase */ 235);
+	
+	var _firebase2 = _interopRequireDefault(_firebase);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Login = function (_Component) {
+		_inherits(Login, _Component);
+	
+		function Login(props) {
+			_classCallCheck(this, Login);
+	
+			var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+	
+			_this.state = {
+				email: '',
+				pass: ''
+			};
+			_this.onChangeEmail = _this.onChangeEmail.bind(_this);
+	
+			_this.onChangePass = _this.onChangePass.bind(_this);
+	
+			_this.handleSubmit = _this.handleSubmit.bind(_this);
+			return _this;
+		}
+	
+		_createClass(Login, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+	
+				_firebase2.default.auth().onAuthStateChanged(function (user) {
+					if (user) {
+						_reactRouter.browserHistory.push('/');
+					}
+				});
+			}
+		}, {
+			key: 'onChangeEmail',
+			value: function onChangeEmail(e) {
+				this.setState({ email: e.target.value });
+			}
+		}, {
+			key: 'onChangePass',
+			value: function onChangePass(e) {
+				this.setState({ pass: e.target.value });
+			}
+		}, {
+			key: 'handleSubmit',
+			value: function handleSubmit(e) {
+				e.preventDefault();
+				var email = this.state.email;
+				var pass = this.state.pass;
+	
+				_firebase2.default.auth().signInWithEmailAndPassword(email, pass).catch(function (err) {});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h3',
+						null,
+						'Login'
+					),
+					_react2.default.createElement(
+						'form',
+						{ onSubmit: this.handleSubmit },
+						_react2.default.createElement('input', { type: 'text',
+							placeholder: 'Email',
+							value: this.state.email,
+							onChange: this.onChangeEmail,
+							required: true
+						}),
+						_react2.default.createElement('input', { type: 'text',
+							placeholder: 'Password',
+							value: this.state.pass,
+							onChange: this.onChangePass,
+							required: true
+						}),
+						_react2.default.createElement(
+							'button',
+							null,
+							'Submit'
+						)
+					)
+				);
+			}
+		}]);
+	
+		return Login;
+	}(_react.Component);
+	
+	exports.default = Login;
 
 /***/ }
 /******/ ]);
