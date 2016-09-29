@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack -d --watch",
+    "watch": "webpack -d --watch", 
     "build": "webpack",
     "serve": "serve ./public",
-    "start": "node index.js"
+    "start":  "node index.js"
   },
   "author": "",
   "license": "ISC",
